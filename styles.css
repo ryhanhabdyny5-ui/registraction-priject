@@ -1,0 +1,62 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f4f4f4;
+}
+
+.form-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 300px;
+}
+
+form label {
+  display: block;
+  margin-top: 1rem;
+}
+
+form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form input:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+small.error {
+  color: red;
+  display: block;
+  font-size: 0.8rem;
+  height: 1em;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.7rem;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  background: #007BFF;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+#successMsg {
+  color: green;
+  margin-top: 1rem;
+}

@@ -1,95 +1,78 @@
-const form = document.getElementById('registrationForm');
-const username = document.getElementById('username');
-const fullName = document.getElementById('fullName');
-const email = document.getElementById('email');
-const password = document.getElementById('password');
-const submitBtn = document.getElementById('submitBtn');
-const successMsg = document.getElementById('successMsg');
+const form = document.getElementById("signupForm");
 
-function validateUsername() {
-  const value = username.value.trim();
-  if (value.length < 3 || value.length > 15) {
-    username.nextElementSibling.textContent = "Username must be between 3 and 15 characters";
-    return false;
-  }
-  if (!/^[a-zA-Z0-9]+$/.test(value)) {
-    username.nextElementSibling.textContent = "Username can only contain letters and numbers";
-    return false;
-  }
-  username.nextElementSibling.textContent = "";
-  return true;
+const username = document.getElementById("username");
+const fullname = document.getElementById("fullname");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+
+const successMsg = document.getElementById("successMsg");
+
+const ruleLength = document.getElementById("rule-length");
+const ruleNumber = document.getElementById("rule-number");
+
+function showError(input, message, errorId) {
+  input.classList.add("invalid");
+  document.getElementById(errorId).innerText = message;
 }
 
-function validateFullName() {
-  const value = fullName.value.trim();
-  if (!/^[a-zA-Z\s]+$/.test(value)) {
-    fullName.nextElementSibling.textContent = "Full name must contain only letters and spaces";
-    return false;
-  }
-  if (value.split(" ").length < 2) {
-    fullName.nextElementSibling.textContent = "Please enter your full name";
-    return false;
-  }
-  fullName.nextElementSibling.textContent = "";
-  return true;
+function clearError(input, errorId) {
+  input.classList.remove("invalid");
+  document.getElementById(errorId).innerText = "";
 }
 
-function validateEmail() {
-  const value = email.value.trim();
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!regex.test(value)) {
-    email.nextElementSibling.textContent = "Please enter a valid email address";
-    return false;
-  }
-  email.nextElementSibling.textContent = "";
-  return true;
-}
+password.addEventListener("input", () => {
+  ruleLength.style.color =
+    password.value.length >= 8 ? "green" : "#999";
 
-function validatePassword() {
-  const value = password.value.trim();
-  const name = fullName.value.toLowerCase();
-  const mail = email.value.toLowerCase();
-  if (value.length < 8) {
-    password.nextElementSibling.textContent = "Password must be at least 8 characters";
-    return false;
-  }
-  if (!(/[\d!@#$%^&*]/.test(value))) {
-    password.nextElementSibling.textContent = "Password must include at least one number or symbol";
-    return false;
-  }
-  if (name && value.toLowerCase().includes(name)) {
-    password.nextElementSibling.textContent = "Password cannot contain your name";
-    return false;
-  }
-  if (mail && value.toLowerCase().includes(mail.split("@")[0])) {
-    password.nextElementSibling.textContent = "Password cannot contain your email";
-    return false;
-  }
-  password.nextElementSibling.textContent = "";
-  return true;
-}
+  ruleNumber.style.color =
+    /[\d\W]/.test(password.value) ? "green" : "#999";
+});
 
-function checkFormValidity() {
-  const isValid = validateUsername() && validateFullName() && validateEmail() && validatePassword();
-  submitBtn.disabled = !isValid;
-}
-
-username.addEventListener('input', checkFormValidity);
-fullName.addEventListener('input', checkFormValidity);
-email.addEventListener('input', checkFormValidity);
-password.addEventListener('input', checkFormValidity);
-
-form.addEventListener('submit', function(e) {
+form.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (validateUsername() && validateFullName() && validateEmail() && validatePassword()) {
-    successMsg.textContent = "Registration successful!";
-    console.log({
-      username: username.value,
-      fullName: fullName.value,
-      email: email.value,
-      password: "********"
-    });
+
+  let valid = true;
+
+  // Username
+  if (username.value.trim() === "") {
+    showError(username, "Username is required", "usernameError");
+    valid = false;
+  } else {
+    clearError(username, "usernameError");
+  }
+
+  // Full Name
+  if (fullname.value.trim() === "") {
+    showError(fullname, "Full name is required", "fullnameError");
+    valid = false;
+  } else {
+    clearError(fullname, "fullnameError");
+  }
+
+  // Email
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email.value)) {
+    showError(email, "Invalid email address", "emailError");
+    valid = false;
+  } else {
+    clearError(email, "emailError");
+  }
+
+  // Password
+  if (password.value.length < 8 || !/[\d\W]/.test(password.value)) {
+    showError(
+      password,
+      "Password does not meet requirements",
+      "passwordError"
+    );
+    valid = false;
+  } else {
+    clearError(password, "passwordError");
+  }
+
+  // Success
+  if (valid) {
+    successMsg.style.display = "block";
     form.reset();
-    submitBtn.disabled = true;
   }
 });
